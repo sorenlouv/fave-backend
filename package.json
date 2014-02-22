@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "devDependencies": {},
   "dependencies": {
+    "mongoose": "~3.8.7",
     "restify": "~2.6.1"
   }
 }
