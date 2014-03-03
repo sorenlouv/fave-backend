@@ -1,3 +1,5 @@
+/*jslint node: true */
+
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
@@ -37,6 +39,7 @@ var Meal = mongoose.model('Meal', {
   restaurant: {
     name: String,
     coordinate: {type: [Number], index: '2d'},
+    categories: [Schema.Types.Mixed],
     _id: {
       type: Schema.Types.ObjectId,
       ref: 'Restaurant',

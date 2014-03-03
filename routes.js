@@ -11,6 +11,7 @@ module.exports = function (server) {
   // Meals
   server.post('/meal', meals.add);
   server.get('/meal', meals.getAll);
+  server.get('/meal/category/:category', meals.getByCategory);
   server.get('/meal/closest', meals.getClosest);
   server.get('/meal/:_id', meals.getSingle);
 
