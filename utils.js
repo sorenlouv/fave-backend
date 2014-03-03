@@ -1,3 +1,5 @@
+/*jslint node: true */
+
 // Dependencies
 var extend = require('util')._extend;
 
@@ -7,7 +9,8 @@ exports.handleOutput = function(res, err, successOutput){
     if(err.errors){
       res.send(err.errors);
     }else if(err.message){
-      res.send({error: err.message});
+      // res.send({error: err.message});
+      console.log('error', err.message);
     }else{
       res.send(JSON.stringify(err));
     }
@@ -27,7 +30,7 @@ exports.parseParameters = function(reqParams){
   var offset = reqParams.offset || 0;
   var limit = reqParams.limit || 10;
 
-  var query = extend({}, reqParams);
+  var query = extend({}, reqParams); // Clone
   delete query.offset;
   delete query.limit;
 

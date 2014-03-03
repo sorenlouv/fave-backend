@@ -1,3 +1,5 @@
+/*jslint node: true */
+
 var mongoose = require('mongoose');
 var Restaurant = require('../models/Restaurant');
 var utils = require('../utils');
