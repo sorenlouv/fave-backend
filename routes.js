@@ -25,6 +25,7 @@ module.exports = function (server) {
   server.get('/restaurant/id/:id', restaurants.getById); // Mostly for scrapers
 
   // Migration scripts
-  server.get('/migrations/add_restaurant_coordinate_to_meal', migrations.addRestaurantCoordinateToMeal);
+  server.get('/migrations/add_restaurant_info_to_meal', migrations.addRestaurantInfoToMeal);
+  server.get('/migrations/remove_restaurants_without_meals', migrations.removeRestaurantsWithoutMeals);
 
 };

@@ -3,7 +3,7 @@
 var Meal = require('../models/Meal');
 var Restaurant = require('../models/Restaurant');
 
-exports.addRestaurantCoordinateToMeal = function (req, res, next) {
+exports.addRestaurantInfoToMeal = function (req, res, next) {
 
   Restaurant.find().lean().exec(function(err, restaurants){
     Meal.find().exec(function(err, meals){
@@ -12,8 +12,8 @@ exports.addRestaurantCoordinateToMeal = function (req, res, next) {
         var meal = mealModel.toObject();
 
         // already migrated
-        if(meal.restaurant.coordinate !== undefined){
-          console.log("Already got coordinate", mealModel.toObject().name);
+        if(mealModel.toObject().restaurant.categories.length > 0){
+          console.log("Already migrated", mealModel.toObject().name);
           return;
         }
 
@@ -32,6 +32,9 @@ exports.addRestaurantCoordinateToMeal = function (req, res, next) {
         // add restaurant name to meal
         mealModel.restaurant.name = restaurant.name;
 
+        // add restaurant category to meal
+        mealModel.restaurant.categories = restaurant.categories;
+
         mealModel.save(function(err){
           if(err){
             console.log("err", err);
@@ -39,6 +42,25 @@ exports.addRestaurantCoordinateToMeal = function (req, res, next) {
             console.log("Updated", mealModel.toObject().name);
           }
         });
+      });
+    });
+  });
+
+  res.send("Finished");
+
+  return next();
+};
+
+exports.removeRestaurantsWithoutMeals = function (req, res, next) {
+
+  Restaurant.find().exec(function(err, restaurants){
+
+    restaurants.forEach(function (restaurant){
+      var restaurant_id = restaurant.get('_id');
+      Meal.count({"restaurant._id": restaurant_id}, function(err, count){
+        if(err === null && count === 0){
+          restaurant.remove();
+        }
       });
     });
   });
