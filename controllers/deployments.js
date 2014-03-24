@@ -27,12 +27,26 @@ exports.add = function (req, res, next) {
   var frontendWWW = '../' + repositoryName + '/www';
   var backendRepo = './';
 
-  var onProcessError = function(msg){
-    console.log('error: ' + msg);
+  var onProcessError = function(error, args){
+    console.log('error: ', error);
+    res.send("Error: " + error + "Args: " + JSON.stringify(args));
   };
 
   var onProcessMessage = function(msg){
     // console.log('message: ' + msg);
+  };
+
+  var onProcessExit = function(code, args, callback){
+    if(code === 0){
+      callback();
+    }else{
+      onProcessError("Exit status was " + code, args);
+    }
+  };
+
+  var onProcessSuccess = function(){
+    res.send("Finished successfully");
+    console.log("Finished successfully");
   };
 
   // Pull changes from master
@@ -40,9 +54,15 @@ exports.add = function (req, res, next) {
     var args = ['git', ['pull', 'origin', 'master'], {cwd: repo}];
     console.log("Running", args);
     var process = spawn.apply(this, args);
-    if(callback) process.on('exit', callback);
-    process.on('error', onProcessError);
-    process.stdout.on('data', onProcessMessage);
+
+    // Events
+    process.on('exit', function(code){
+      onProcessExit(code, args, callback);
+    });
+    process.on('error', function(error){
+      onProcessError(error, args);
+    }); // On error
+    process.stdout.on('data', onProcessMessage); // On message (debugging)
   };
 
   // install grunt plugins
@@ -50,9 +70,15 @@ exports.add = function (req, res, next) {
     var args = ['npm', ['install'], {cwd: frontendWWW}];
     console.log("Running", args);
     var process = spawn.apply(this, args);
-    process.on('exit', grunt);
-    process.on('error', onProcessError);
-    process.stdout.on('data', onProcessMessage);
+
+    // Events
+    process.on('exit', function(code){
+      onProcessExit(code, args, grunt); // On exit (process finished "normally")
+    });
+    process.on('error', function(error){
+      onProcessError(error, args);
+    }); // On error
+    process.stdout.on('data', onProcessMessage); // on message (debugging)
   };
 
   // run grunt
@@ -60,18 +86,21 @@ exports.add = function (req, res, next) {
     var args = ['grunt', [], {cwd: frontendWWW}];
     console.log("Running", args);
     var process = spawn.apply(this, args);
-    process.on('error', onProcessError);
-    process.stdout.on('data', onProcessMessage);
+
+    // Events
+    process.on('exit', function(code){
+      onProcessExit(code, args, onProcessSuccess); // On exit (process finished "normally")
+    });
+    process.on('error', onProcessError); // On error
+    process.stdout.on('data', onProcessMessage); // on message (debugging)
   };
 
 
   if(repositoryName === "fave-frontend"){
     gitPull(frontendRepo, npmInstall);
   }else if(repositoryName === "fave-backend"){
-    gitPull(backendRepo);
+    gitPull(backendRepo, onProcessSuccess);
   }
-
-  res.send("Done");
 
 
   return next();
