@@ -88,7 +88,7 @@ exports.getClosest = function(req, res, next){
  * Only for Yelp scraping
  * Get internal _id by looking up yelp id
  *******************************************/
-exports.getById = function (req, res, next) {
+exports.getByYelpId = function (req, res, next) {
   var params = utils.parseParameters(req.params);
 
   Restaurant.findOne(params.query).select('id').exec(function (err, restaurant) {

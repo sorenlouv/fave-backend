@@ -21,8 +21,7 @@ module.exports = function (server) {
   server.get('/restaurant/closest', restaurants.getClosest);
   server.get('/restaurant/:_id', restaurants.getSingle);
   server.put('/restaurant/:_id', restaurants.updateSingle); // Mostly for scrapers
-
-  server.get('/restaurant/id/:id', restaurants.getById); // Mostly for scrapers
+  server.get('/restaurant/id/:id', restaurants.getByYelpId); // Mostly for scrapers
 
   // Migration scripts
   server.get('/migrations/add_restaurant_info_to_meal', migrations.addRestaurantInfoToMeal);
