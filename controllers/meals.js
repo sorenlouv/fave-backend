@@ -89,8 +89,7 @@ exports.getClosest = function(req, res, next){
       $elemMatch: {$in:[req.params.category]}
     };
   }
-
-  Meal.find(query).skip(params.offset).limit(params.limit).exec(function(err, restaurants){
+  Meal.find(query).skip(params.offset).limit(params.limit).sort(params.sort).exec(function(err, restaurants){
     utils.handleOutput(res, err, restaurants);
   });
 
