@@ -40,6 +40,7 @@ var Meal = mongoose.model('Meal', {
     name: String,
     coordinate: {type: [Number], index: '2d'},
     categories: [Schema.Types.Mixed],
+    phone: String,
     _id: {
       type: Schema.Types.ObjectId,
       ref: 'Restaurant',

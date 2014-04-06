@@ -7,6 +7,7 @@ var migrations = require('./controllers/migrations');
 var deployments = require('./controllers/deployments');
 
 module.exports = function (server) {
+  'use strict';
 
   // Meals
   server.post('/meal', meals.add);
@@ -24,7 +25,7 @@ module.exports = function (server) {
   server.get('/restaurant/id/:id', restaurants.getByYelpId); // Mostly for scrapers
 
   // Migration scripts
-  server.get('/migrations/add_restaurant_info_to_meal', migrations.addRestaurantInfoToMeal);
+  server.get('/migrations/add_coordinate_to_meal', migrations.addCoordinateToMeal);
   server.get('/migrations/remove_restaurants_without_meals', migrations.removeRestaurantsWithoutMeals);
 
   // Deployment
