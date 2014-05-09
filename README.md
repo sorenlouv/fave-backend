@@ -26,9 +26,9 @@
     cd db-exports
 
 #### Import
-    mongoimport --collection meals --file meals.json
-    mongoimport --collection restaurants --file restaurants.json
+    mongoimport --db test --collection meals --file meals.json
+    mongoimport --db test --collection restaurants --file restaurants.json
 
 #### Export
-    mongoexport --collection meals --out meals.json
-    mongoexport --collection restaurants --out restaurants.json
+    mongoexport --db test --collection meals --out meals.json
+    mongoexport --db test --collection restaurants --out restaurants.json
